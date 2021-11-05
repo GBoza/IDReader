@@ -224,15 +224,18 @@ def Initialise_blocking(aProcessMessages = True, aProcessInputMessages = True, a
 	return MMMReader_Initialise(None, None, None, None, aProcessMessages, aProcessInputMessages, aParam)
 
 def Initialise_callback(aDataCallback = None, aEventCallback = None, aErrorCallback = None, aCertCallback = None, aParam = None):
+	global _StaticDataCallback
 	@ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_int32, ctypes.c_int, ctypes.c_void_p)
 	def _StaticDataCallback(aParam, aDataType, aDataLen, aDataPtr):
 		if aDataCallback != None:
 			aDataCallback(aDataType, aDataLen, aDataPtr)
+	global _StaticEventCallback
 	@ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_int32)
 	def _StaticEventCallback(aParam, aEventCode):
 		if aEventCallback != None:
 			aEventCallback(aEventCode)
 		return
+	global _StaticErrorCallback
 	@ctypes.CFUNCTYPE(None, ctypes.c_int32, ctypes.c_wchar_p, ctypes.c_void_p)
 	def _StaticErrorCallback(aErrorCode, aErrorMessage, aParam):
 		if aErrorCallback != None:
